@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+  
+    "name": "Recipal",
+    "description": "This extension allows aids cooks in reading online recipes",
+    "version": "1.0",
+  
+    "browser_action": {
+      "default_icon": "icon.png"
+    },
+    "permissions": [
+      "activeTab",
+      "storage",
+      "tabs",
+      "<all_urls>"
+    ],
+    "background":{
+      "scripts": ["recipal.js"]
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "css": ["styleSheet.css"],
+        "js": ["contentscript.js"]
+      }
+    ]
+  }
