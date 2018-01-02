@@ -70,15 +70,29 @@ let [...directionsList] = directionsListHTML[0].children
 
 //Using for loops to locate all ingredients in the directions section and adding the highlight and tooltip text.
 directionsList.forEach(elem=>{  
+    let directionArray = elem.innerHTML.split(' ') //note: has lots of '' elements
+    let newPara = ''
     if(elem.childElementCount===0){
         for(let i=0;i<Object.keys(ingredientObj).length;i++){
-            for(let j=0;j<ingredientObj[i].foodPart.length;j++){
-                if(elem.innerHTML.indexOf(ingredientObj[i].foodPart[j]!==-1)){
-                    console.log()
-                    elem.innerHTML = elem.innerHTML.replace(ingredientObj[i].foodPart[j], `<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+ingredientObj[i].foodPart[j]+`</span>`)
+            for(let j=0;j<ingredientObj[i].foodPart.length;j++){ //need this nested since some have more than one food part.
+                let currentFood = ingredientObj[i].foodPart[j]
+                for(let k=0; k<directionArray.length ;k++){
+                    let directionWord = directionArray[k]
+                    if(directionWord!==""){
+                        if(directionWord===currentFood||directionWord ===currentFood+','){
+                           if(directionWord.charAt(directionArray[k].length-1)===','){
+                            directionArray[k]=`<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+currentFood+`,</span>`
+                           }
+                           else{
+                            directionArray[k]=`<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>`
+                           }
+                        }
+                    }
                 }
             }
         }
+    newPara = directionArray.join(' ')
+    elem.innerHTML = newPara
     }
 })
 
