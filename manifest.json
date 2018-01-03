@@ -18,11 +18,5 @@
     ],
     "background":{
       "scripts": ["recipal.js"]
-    },
-    "content_scripts": [
-      {
-        "matches": ["http://www.foodnetwork.com/recipes/*","https://cooking.nytimes.com/recipes/*","http://allrecipes.com/recipe/*"],
-        "js": ["contentscript.js"]
-      }
-    ]
+    }
   }
