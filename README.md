@@ -1,5 +1,5 @@
 # Recipal
 Chrome extension for reading recipes online.
 
-Currenlty works with FoodNetwork.com recipies with a limited library.
+Currenlty works with foodnetwork.com, cooking.nytimes.com, and allrecipes.com recipies with a limited food library.
 

@@ -2,7 +2,7 @@
     "manifest_version": 2,
   
     "name": "Recipal",
-    "description": "This extension allows aids cooks in reading online recipes",
+    "description": "This extension aids cooks in reading online recipes",
     "version": "1.0",
   
     "browser_action": {
@@ -12,14 +12,16 @@
       "activeTab",
       "storage",
       "tabs",
-      "<all_urls>"
+      "http://www.foodnetwork.com/recipes/*",
+      "https://cooking.nytimes.com/recipes/*",
+      "http://allrecipes.com/recipe/*"
     ],
     "background":{
       "scripts": ["recipal.js"]
     },
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
+        "matches": ["http://www.foodnetwork.com/recipes/*","https://cooking.nytimes.com/recipes/*","http://allrecipes.com/recipe/*"],
         "js": ["contentscript.js"]
       }
     ]
