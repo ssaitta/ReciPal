@@ -17,10 +17,13 @@ function getCurrentTabUrl(callback) {
 chrome.browserAction.onClicked.addListener(function(tab,url) {
   getCurrentTabUrl((url) => {
     chrome.storage.sync.set({"url": url},()=>{
-    console.log('saved') 
-    console.log(url)
    })
   })
-  chrome.tabs.executeScript(null, {file: "contentscript.js"});
+  //if(url.indexOf('foodnetwork')!==-1){
+    chrome.tabs.executeScript(null, {file: "contentscript.js"});
+  //}
+  // if(url.indexOf('nytimes')!==-1){
+  //   chrome.tabs.executeScript(null, {file: "contentscriptNYT.js"});
+  // }
 });
 

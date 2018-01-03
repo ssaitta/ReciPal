@@ -3,6 +3,7 @@
 //initalize the HTML class names we use to find the ingredients list and directions list
 let ingredientsClassName = ''
 let directionsClassName = ''
+let website = ''
 
 //use the async API chrome.storage to retreive the url from the backgorund script. Then based on that url set the ingredients and directions class names for the three recipe sites, nytimes cooking, foodnetwork, and all recipes. 
 
@@ -10,69 +11,93 @@ chrome.storage.sync.get('url', (obj)=>{
     console.log('fetched')
     let url = obj.url
     if(url.indexOf('nytimes')!==-1){
-        ingredientsClassName = 'recipeIngredient'
-        directionsClassName = 'recipeInstructions'
-        console.log(ingredientsClassName)
+        ingredientsClassName = 'recipe-ingredients'
+        directionsClassName = 'recipe-steps'
+        website = 'nytimes'
     }
     else if(url.indexOf('foodnetwork')!==-1){
         ingredientsClassName = 'o-Ingredients__a-ListItemText'
         directionsClassName = 'o-Method__m-Body'
+        website = 'foodnetwork'
     }
     else if(url.indexOf('allrecipes')!==-1){
-        ingredientsClassName = 'checkList'
+        ingredientsClassName = 'dropdownwrapper'
         directionsClassName = 'recipe-directions__list'
+        website = 'allrecipes'
     }
 })
 
-console.log(ingredientsClassName)   //right now this is coming through as blank because chrome.storage.sync.get is async
+//delayed so that the async chrome.storage.sync.get() is completed first
+setTimeout(()=>{
 
-//currently hard coded to work with food network:
+let ingredientObj = {}, ingredientsList = [],removedCommas = '';
 
-//breaking down the ingredients list into the ingredients object:
-let [...ingredientsList] = document.getElementsByClassName("o-Ingredients__a-ListItemText") //"o-Ingredients__a-ListItemText"
-console.log(ingredientsList)
-let ingredientObj = {}
-//this will give us the list in the from of strings in an array of the ingredients 
 
+if(website==='nytimes'){
+    [...ingredientsList] = document.getElementsByClassName(ingredientsClassName)[0].children
+}
+
+if(website==='foodnetwork'){
+    [...ingredientsList] = document.getElementsByClassName(ingredientsClassName)
+}
+
+if(website==='allrecipes'){
+    let [...ingredentLists] = document.getElementsByClassName(ingredientsClassName)
+    ingredentLists.forEach((elem)=>{
+        ingredientsList.push([...elem.children])
+    })
+    ingredientsList = ingredientsList.reduce(function(a,b){
+        return a.concat(b);
+    })
+    ingredientsList.pop() //the last ingredient is the "Add all ingredients to list" button
+}
 
 //building the ingredients object:
 ingredientsList.forEach((elem,index)=>{
-    let num = ['1','2','3','4','5','6','7','8','9','1/2','1/3','1/4','1/8','2/3','2/4','3/4']
-    let measurments = ['cup','cups','teaspoon','teaspoons','tablespoon','tablespoons','clove','cloves','medium','pound','pounds','sprig','sprigs','plus','about','small','pinch']
-    let food = ['onion','onions','garlic','oil','sausage','sage','wine','chicken','stock','pumpkin','heavy', 'cream' ,'salt','pepper','penne','romano','parmiigiano','pumpernickel','bay', 'leaf', 'cinnamon','nutmeg','cheese','spinach','apple','apples','vinegar','mustard','honey']
-    let removedCommans = elem.innerHTML.replace(',','');
-    let fullTextSplit = removedCommans.split(' ')
-    let quantityTextPart = fullTextSplit.filter((word)=>{
-       if(num.indexOf(word) !== -1 || measurments.indexOf(word) !== -1){
-           return word
-       }
-    }) 
+    let quantityTextPart = [], foodTextPart = [];
+    let num = ['0','1','2','3','4','5','6','7','8','9','½','1/2','⅓','1/3','¼','1/4','⅛','1/8','⅜','3/8','⅝','5/8','⅞','7/8','⅔','⅔','2/3','¾','3/4','⅕','1/5','⅖','2/5','⅗','3/5','⅘','4/5','⅙','1/6','⅚','5/6','26','28','16','10','15','20']
+        let measurments = ['cup','cups','teaspoon','teaspoons','tablespoon','tablespoons','clove','cloves','medium','pound','pounds','sprig','sprigs','plus','about','small','pinch','box','bag','stalk','stick','approximately','to','pieces','ounces','oz','lb','lbs','tbs','tsp']
+        let food = ['onion','onions','garlic','oil','sausage','sage','wine','chicken','stock','pumpkin','heavy', 'cream' ,'salt','pepper','penne','romano','parmiigiano','pumpernickel','bay', 'leaf', 'cinnamon','nutmeg','cheese','spinach','apple','apples','vinegar','mustard','honey','potatoes','potato','milk','butter','chives','rolls','butter','buttermilk','milk']
 
-    let foodTextPart = fullTextSplit.filter((word)=>{
+    if(website==='foodnetwork'){
+        removedCommas = elem.innerHTML.replace(/,+/g,'').toLowerCase()
+    }
+    if(website ==="nytimes"||website ==="allrecipes"){
+        removedCommas = elem.innerText.replace(/,+/g,'').toLowerCase()
+    }
+
+    let fullTextSplit = removedCommas.split(' ')
+    quantityTextPart = fullTextSplit.filter((word)=>{
+        if(num.indexOf(word) !== -1 || measurments.indexOf(word) !== -1){
+            return word
+        }
+    }) 
+    foodTextPart = fullTextSplit.filter((word)=>{
         if(food.indexOf(word) !== -1){
             return word
         }
     }) 
+   
+
     ingredientObj[index] = {}
     ingredientObj[index]['quantity'] = quantityTextPart.join(' ')
     ingredientObj[index]['foodPart'] = foodTextPart//.join(' ')
 })
 
-// console.log(ingredientObj)
-
+console.log(ingredientObj)
 
 //building out the directions list and making it iterable
-let [...directionsListHTML] = document.getElementsByClassName("o-Method__m-Body") //"o-Method__m-Body"
+let [...directionsListHTML] = document.getElementsByClassName(directionsClassName) //"o-Method__m-Body"
 let [...directionsList] = directionsListHTML[0].children
-
 //this will give us the list in the form of srings in an array of the directions
-
 
 //Using for loops to locate all ingredients in the directions section and adding the highlight and tooltip text.
 directionsList.forEach(elem=>{  
-    let directionArray = elem.innerHTML.split(' ') //note: has lots of '' elements
-    let newPara = ''
-    if(elem.childElementCount===0){
+    let directionArray = elem.innerHTML.split(' '), newPara = '';
+
+    if(elem.childElementCount===0 && website==="nytimes" ||
+    elem.childElementCount===0 && website==="foodnetwork" ||
+    elem.childElementCount===1 && website==="allrecipes"){
         for(let i=0;i<Object.keys(ingredientObj).length;i++){
             for(let j=0;j<ingredientObj[i].foodPart.length;j++){ //need this nested since some have more than one food part.
                 let currentFood = ingredientObj[i].foodPart[j]
@@ -96,12 +121,13 @@ directionsList.forEach(elem=>{
                 }
             }
         }
-    //replae whole direction paragraph
+    //replace whole direction paragraph
     newPara = directionArray.join(' ')
     elem.innerHTML = newPara
     }
 })
 
+},0) //timeout
 
 //testing on 
 //http://www.foodnetwork.com/recipes/rachael-ray/pasta-with-pumpkin-and-sausage-recipe-1939614
