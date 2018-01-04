@@ -19,11 +19,6 @@ chrome.browserAction.onClicked.addListener(function(tab,url) {
     chrome.storage.sync.set({"url": url},()=>{
    })
   })
-  //if(url.indexOf('foodnetwork')!==-1){
     chrome.tabs.executeScript(null, {file: "contentscript.js"});
-  //}
-  // if(url.indexOf('nytimes')!==-1){
-  //   chrome.tabs.executeScript(null, {file: "contentscriptNYT.js"});
-  // }
 });
 
