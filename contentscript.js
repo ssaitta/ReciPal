@@ -107,14 +107,14 @@ directionsList.forEach(elem=>{
                         if(directionWord===currentFood||directionWord ===currentFood+','||directionWord===currentFood+'.'){
                             //retain ',' if present in original directions
                            if(directionWord.charAt(directionArray[k].length-1)===','){
-                            directionArray[k]=`<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>,`
+                            directionArray[k]=`<span style="background-color:rgba(247, 213, 26, 0.507)" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>,`
                            }
                            //retain '.' if present in original directions
                            else if(directionWord.charAt(directionArray[k].length-1)==='.'){
-                            directionArray[k]=`<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>.`
+                            directionArray[k]=`<span style="background-color:rgba(247, 213, 26, 0.507)" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>.`
                            }
                            else{
-                            directionArray[k]=`<span style="background-color:yellow" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>`
+                            directionArray[k]=`<span style="background-color:rgba(247, 213, 26, 0.507)" title="`+ingredientObj[i].quantity+`">`+currentFood+`</span>`
                            }
                         }
                     }
