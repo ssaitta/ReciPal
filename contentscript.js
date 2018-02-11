@@ -7,7 +7,6 @@ let website = ''
 
 //use the async API chrome.storage to retreive the url from the backgorund script. Then based on that url set the ingredients and directions class names for the three recipe sites, nytimes cooking, foodnetwork, and all recipes.
 chrome.storage.sync.get('url', (obj) => {
-    console.log('fetched')
     let url = obj.url
     if (url.indexOf('nytimes') !== -1){
         ingredientsClassName = 'recipe-ingredients'
@@ -32,16 +31,11 @@ function main(){
 
 let ingredientObj = {}, ingredientsList = [], removedCommas = '', removeGarbage = '';
 
-
-if (website === 'nytimes'){
-    [...ingredientsList] = document.getElementsByClassName(ingredientsClassName)[0].children
-}
-
 if (website === 'foodnetwork'){
     [...ingredientsList] = document.getElementsByClassName(ingredientsClassName)
 }
 
-if (website === 'allrecipes'){
+if (website === 'allrecipes' || website === 'nytimes'){
     let [...ingredentLists] = document.getElementsByClassName(ingredientsClassName)
     ingredentLists.forEach((elem) => {
         ingredientsList.push([...elem.children])
@@ -56,7 +50,7 @@ if (website === 'allrecipes'){
 ingredientsList.forEach((elem, index) => {
     let quantityTextPart = [], foodTextPart = [];
     let num = ['½', '1/2', '⅓', '1/3', '¼', '1/4', '⅛', '1/8', '⅜', '3/8', '⅝', '5/8', '⅞', '7/8', '⅔', '⅔', '2/3', '¾', '3/4', '⅕', '1/5', '⅖', '2/5', '⅗', '3/5', '⅘', '4/5', '⅙', '1/6', '⅚', '5/6']
-        let measurments = ['cup', 'cups', 'teaspoon', 'teaspoons', 'tablespoon', 'tablespoons', 'clove', 'cloves', 'medium', 'pound', 'pounds', 'sprig', 'sprigs', 'plus', 'about', 'small', 'pinch', 'box', 'bag', 'stalk', 'stick', 'approximately', 'to', 'pieces', 'ounces', 'oz', 'lb', 'lbs', 'tbs', 'tsp', 'bunch', 'inch']
+        let measurments = ['cup', 'cups', 'teaspoon', 'teaspoons', 'tablespoon', 'tablespoons', 'clove', 'cloves', 'medium', 'pound', 'pounds', 'sprig', 'sprigs', 'plus', 'about', 'small', 'pinch', 'box', 'bag', 'stalk', 'stick', 'approximately', 'to', 'pieces', 'ounces', 'ounce', 'oz', 'lb', 'lbs', 'tbs', 'tsp', 'bunch', 'inch']
         let food = ['onion', 'onions', 'garlic', 'oil', 'sausage', 'sage', 'wine', 'chicken', 'pork', 'lamb', 'venison', 'beef', 'heart', 'liver', 'tongue', 'bone', 'buffalo', 'bison', 'calf', 'goat', 'ham', 'kangaroo', 'marrow', 'moose', 'organ', 'meats', 'bacon', 'rabbit', 'snake', 'sweetbread', 'sweetbreads', 'tripe', 'turtle', 'veal', 'cornish', 'game', 'hen', 'duck', 'goose', 'guinea', 'pheasant', 'quail', 'squab', 'turkey', 'steak', 'steaks', 'artichoke', 'artichokes', 'arugula', 'bean', 'beans', 'sprouts', 'chickpeas', 'garbanzo', 'garbanzos', 'lentils', 'lentil', 'black', 'green', 'red', 'yellow', 'pink', 'white', 'kidney', 'lima', 'navy', 'pinto', 'pea', 'peas', 'split', 'soy', 'beet', 'bok', 'choy', 'broccoflower', 'broccoli', 'brussels', 'cabbage', 'carrots', 'cauliflower',
         'celery', 'chard', 'greens', 'collard', 'corn', 'frisee', 'fennel', 'anise', 'basic', 'caraway', 'cilantro', 'chamomile', 'dill', 'lavender', 'lemon', 'grass', 'mint', 'marjoram', 'oregano', 'parsley', 'rosemary', 'thyme', 'kale', 'lettuce', 'mushroom', 'mushrooms', 'mustard', 'okra', 'leek', 'leeks', 'shallot', 'shallots', 'spring', 'pepprs', 'chili', 'jalapeño', 'habanero', 'paprika', 'tabasco', 'flakes', 'cayenne', 'powder', 'rhubarb', 'ginger', 'parsnip', 'parsnips', 'turnip', 'rutabaga', 'radish', 'radishes', 'wasabi', 'horseradish', 'squash', 'melon', 'bitter', 'acorn', 'butternut', 'banana', 'bananas', 'courgette', 'courgettes', 'zucchini', 'cucumber', 'pickel', 'pickels', 'patty', 'spaghetti', 'tomato', 'sweet', 'taro', 'yam', 'yucca', 'water', 'chestnut', 'chestnuts', 'watercress', 'apricot', 'apricots', 'avocado',
         'avocados', 'blackberry', 'blackberries', 'blueberry', 'blueberries', 'blackcurrant', 'blackcurrants', 'boysenberry', 'boysenberries', 'berries', 'currant', 'currants', 'broth', 'stock', 'pumpkin', 'heavy', 'salt', 'pepper', 'penne', 'romano', 'parmiigiano', 'pumpernickel', 'bay', 'leaf', 'cinnamon', 'cherry', 'cherries', 'coconut', 'coconuts', 'cranberry', 'cranberries', 'date', 'dates', 'dragonfruit', 'durian', 'durians', 'elderberry', 'elderberries', 'fig', 'figs', 'goji', 'gooseberry', 'gooseberries', 'grape', 'grapes', 'raisin', 'raisins', 'grapefruit', 'grapefruits', 'fruit', 'fruits', 'guava', 'guavas', 'huckleberry', 'huckleberries', 'jackfruit', 'juniper', 'kiwi', 'kiwis', 'kiwifruit', 'kiwifruits', 'lemon', 'lemons', 'lime',
@@ -156,7 +150,7 @@ for ( let key in ingredientObj){
     })
 }
 
-console.log(ingredientObj)
+// console.log(ingredientObj)
 
 //building out the directions list and making it iterable
 let [...directionsListHTML] = document.getElementsByClassName(directionsClassName) //"o-Method__m-Body"
