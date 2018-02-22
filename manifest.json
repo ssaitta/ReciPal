@@ -1,9 +1,9 @@
 {
-    "manifest_version": 3,
+    "manifest_version": 2,
   
     "name": "ReciPal",
     "description": "Extension to help cooks read online recipes",
-    "version": "1.1",
+    "version": "1.2",
     "icons": { "16": "icon_16.png", "48": "icon_48.png", "128": "icon_128.png"},
     "browser_action": {
       "default_icon": "icon_128.png"
